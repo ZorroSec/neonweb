@@ -7,7 +7,7 @@ app.engine("hbs", engine({
   defaultLayout: "main",
 }))
 app.set("view engine", "hbs")
-app.set("views", "./views")
+app.set("views", express.static("views"))
 
 app.get("/", (req, res)=>{
   res.render("home")
