@@ -5,6 +5,7 @@ const path = require("path")
 const { queryIpFunction } = require("./models/ip.js")
 const { MySqlConnection } = require("./database/database.js")
 const { users } = require("./user/createUser.js")
+const { posts } = require("./posts/createPost.js")
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.engine("hbs", exbhs.engine({
@@ -15,6 +16,18 @@ app.engine("hbs", exbhs.engine({
 app.set("view engine", "hbs")
 app.use("views", express.static(path.join(__dirname + "/views")))
 app.use(express.static(path.join(__dirname + "/assets")))
+
+
+app.get('/publicar', async(req, res)=>{
+  const createPost = await posts.create({
+    nome: 'josecipriano',
+    titulo: 'What is lorem ipsum?',
+    post_likes: '1',
+    publicacao: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`
+  })
+  res.json(createPost)
+})
+
 app.get("/", async (req, res) => {
   const ip = await queryIpFunction()
   const pool = await MySqlConnection()
@@ -129,3 +142,28 @@ app.post('/cadastro', async (req, res)=>{
     })
   }
 })
+
+app.get('/:nome', async(req, res)=>{
+  const username = req.params.nome
+  const ip = await queryIpFunction()
+  const pool = await MySqlConnection()
+  const [user, result] = await pool.query(`
+  SELECT *
+  FROM users
+  WHERE nome = '${username}'
+  `)
+  if(user.length < 1){
+    res.redirect("/login")
+  }else{
+    const [posts, results] = await pool.query(`
+    SELECT *
+    FROM posts
+    WHERE nome = '${username}'
+    `)
+    res.render("profile", {
+      nome: user[0]['nome'],
+      posts
+    })
+  }
+})
+
