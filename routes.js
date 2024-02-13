@@ -64,6 +64,14 @@ app.post('/login', async (req, res)=>{
   WHERE email = '${email}' AND senha = '${senha}'
   `)
   if(user.length < 1){
+    const [update, results] = await pool.query(`
+    UPDATE users
+    SET ip = '${ip}'
+    WHERE email = '${email}'
+    `)
+    console.log(update)
+    res.redirect("/")
+  }else{
     const validation = `
     <div class="alert alert-danger" role="alert">
       Email ou senha incorreto!
@@ -72,14 +80,7 @@ app.post('/login', async (req, res)=>{
     res.render('login', {
       validation
     })
-  }else{
-    const [update, results] = await pool.query(`
-    UPDATE users
-    SET ip = '${ip}'
-    WHERE email = '${email}'
-    `)
-    console.log(update)
-    res.redirect("/")
+    
   }
 })
 
