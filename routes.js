@@ -66,7 +66,7 @@ app.post('/login', async (req, res)=>{
   if(user.length < 1){
     const [update, results] = await pool.query(`
     UPDATE users
-    SET ip = '${ip}'
+    SET ip = '${ip.query}'
     WHERE email = '${email}'
     `)
     console.log(update)
