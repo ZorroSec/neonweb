@@ -1,21 +1,21 @@
 <div class="container">
   {{#each posts}}
-    <div class="card">
-      <div class="card-title">
-        <div class="titulo">
-          {{titulo}}
+    <div class="card mb-3">
+        <div class="card-body">
+          <div class="card-title">
+            <h6>
+              <a href="/post/{{titulo}}">{{titulo}}</a>
+            </h6>
+          </div>
+          <div class="card-subtitle">
+            <a href="/{{nome}}">{{nome}}</a>
+          </div>
+          <div class="card-text">
+            {{createdAt}}
+            <br>
+            {{updatedAt}}
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <div class="card-text">
-          <div class="data__post">
-            {{data}}
-          </div>
-          <div class="username">
-            {{nome}}
-          </div>
-        </div>
-      </div>
-    </div>
   {{/each}}
 </div>
