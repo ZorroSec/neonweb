@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="loginForm">
+    <form action="/login" method="post" class="container">
+      <h2>
+        Login
+      </h2>
+      {{{validation}}}
+      <div class="mb-3">
+        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" name="email" id="email" class="form-control" aria-describedby="emailHelp" placeholder="Email">
+        <div id="emailHelp" class="form-text">Nunca iremos compartilhar seu email com mais, ninguem.</div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Senha <span class="text-danger">*</span></label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Senha">
+      </div>
+      <div class="mb-3 d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Entrar</button>
+      </div>
+    </form>
+  </div>
+</div>
