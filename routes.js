@@ -17,6 +17,29 @@ app.set("view engine", "hbs")
 app.use("views", express.static(path.join(__dirname + "/views")))
 app.use(express.static(path.join(__dirname + "/assets")))
 
+app.get('/:nome/conteudos', async(req, res)=>{
+  const username = req.params.nome
+  const ip = await queryIpFunction()
+  const pool = await MySqlConnection()
+  const [user, result] = await pool.query(`
+  SELECT *
+  FROM users
+  WHERE nome = '${username}'
+  `)
+  if(user.length < 1){
+    res.redirect("/login")
+  }else{
+    const [posts, results] = await pool.query(`
+    SELECT *
+    FROM posts
+    WHERE nome = '${username}'
+    `)
+    res.render("conteudos", {
+      nome: user[0]['nome'],
+      posts
+    })
+  }
+})
 
 app.get('/publicar', async(req, res)=>{
   const createPost = await posts.create({
@@ -150,19 +173,19 @@ app.get('/:nome', async(req, res)=>{
   const [user, result] = await pool.query(`
   SELECT *
   FROM users
-  WHERE nome = '${username}'
+  WHERE ip = '${ip.query}'
   `)
   if(user.length < 1){
     res.redirect("/login")
   }else{
-    const [posts, results] = await pool.query(`
+    const [userProfile, results] = await pool.query(`
     SELECT *
-    FROM posts
+    FROM users
     WHERE nome = '${username}'
     `)
     res.render("profile", {
       nome: user[0]['nome'],
-      posts
+      userProfile
     })
   }
 })

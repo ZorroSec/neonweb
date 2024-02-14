@@ -1,26 +1,37 @@
 <div class="container">
-  <h2>
-    Conteúdos de {{nome}}
-  </h2>
-  <div class="container">
-    {{#each posts}}
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="card-title">
-            <h4>
-              <a href="/post/{{id}}">{{titulo}}</a>
-            </h4>
-          </div>
-          <div class="card-subtitle">
-            <a href="/{{nome}}">{{nome}}</a>
-          </div>
-          <div class="card-text">
-            {{createdAt}}
-            <br>
-            {{updatedAt}}
+  {{#each userProfile}}
+    <div class="container">
+      <h4>
+        {{nome}}
+      </h4>
+      <div class="container">
+        <div class="options">
+            <ul>
+              <li>
+                <a href="/{{nome}}/conteudos">Publicações</a>
+              </li>
+              <li>
+                <a href="/{{nome}}/comentarios">Comentários</a>
+              </li>
+            </ul>
+        </div>
+        <hr class="divider">
+        <div class="container">
+          <i>Perfil iniciado em:  {{createdAt}}</i>
+          <div class="container">
+            <strong style="font-size: 14px;">Descrição</strong>
+            <div class="container">
+              <div class="card container">
+                <div class="card-body">
+                  <div class="card-text">
+                    {{{descricao}}}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    {{/each}}
-  </div>
+    </div>
+  {{/each}}
 </div>
