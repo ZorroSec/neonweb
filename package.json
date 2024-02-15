@@ -17,6 +17,8 @@
     "sequelize": "^6.37.0"
   },
   "dependencies": {
-    "express-handlebars": "^7.1.2"
+    "express-handlebars": "^7.1.2",
+    "marked": "^12.0.0",
+    "showdown": "^2.1.0"
   }
 }

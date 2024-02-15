@@ -6,6 +6,8 @@ const { queryIpFunction } = require("./models/ip.js")
 const { MySqlConnection } = require("./database/database.js")
 const { users } = require("./user/createUser.js")
 const { posts } = require("./posts/createPost.js")
+const { Converter } = require("showdown")
+
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.engine("hbs", exbhs.engine({
@@ -16,6 +18,68 @@ app.engine("hbs", exbhs.engine({
 app.set("view engine", "hbs")
 app.use("views", express.static(path.join(__dirname + "/views")))
 app.use(express.static(path.join(__dirname + "/assets")))
+
+const converter = new Converter()
+
+app.get('/perfil', async(req, res)=>{
+  const ip = await queryIpFunction()
+  const pool = await MySqlConnection()
+  const [user, result] = await pool.query(`
+  SELECT *
+  FROM users
+  WHERE ip = '${ip.query}'
+  `)
+  if(user.length < 1){
+    res.redirect("/login")
+  }else{
+    const [userProfile, results] = await pool.query(`
+    SELECT *
+    FROM users
+    WHERE nome = '${user[0]['nome']}'
+    `)
+    res.render("editProfile", {
+      nome: user[0]['nome'],
+      userProfile
+    })
+  }
+})
+app.post('/perfil', async(req, res)=>{
+  const ip = await queryIpFunction()
+  const pool = await MySqlConnection()
+  const [user, result] = await pool.query(`
+  SELECT *
+  FROM users
+  WHERE ip = '${ip.query}'
+  `)
+
+  const [userProfile, results] = await pool.query(`
+  SELECT *
+  FROM users
+  WHERE nome = '${user[0]['nome']}'
+  `)
+  const { nome, email, descricao } = req.body
+  const formatDescription = converter.makeHtml(descricao)
+  console.log(formatDescription)
+  const [update, resul] = await pool.query(`
+  UPDATE users
+  SET nome = '${nome}',
+  email = '${email}',
+  descricao = '${formatDescription}'
+  WHERE ip = '${ip.query}'
+  `)
+  const notifyAll = `
+  <div class='alert alert-success' role='alert'>
+    Perfil atualizado com sucesso!
+  </div>
+  `
+  res.render("editProfile", {
+    nome: user[0]['nome'],
+    userProfile,
+    notifyAll
+  })
+
+})
+
 
 app.get('/:nome/conteudos', async(req, res)=>{
   const username = req.params.nome
@@ -67,6 +131,7 @@ app.get("/", async (req, res) => {
     const [posts, results] = await pool.query(`
     SELECT *
     FROM posts
+    ORDER BY post_likes DESC
     `)
     res.render("home", {
       nome: user[0]['nome'],

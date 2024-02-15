@@ -1,21 +1,31 @@
 <div class="container">
   {{#each posts}}
-    <div class="card mb-3">
-        <div class="card-body">
-          <div class="card-title">
-            <h6>
-              <a href="/post/{{titulo}}">{{titulo}}</a>
-            </h6>
-          </div>
-          <div class="card-subtitle">
-            <a href="/{{nome}}">{{nome}}</a>
-          </div>
-          <div class="card-text">
-            {{createdAt}}
-            <br>
-            {{updatedAt}}
+    <div class="container">
+      <div class="container">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="card-title">
+              <h6>
+                <a href="/post/{{titulo}}">{{titulo}}</a>
+              </h6>
+            </div>
+            <div class="card-text" style="list-style: none;">
+              <ul class="list-group list-group-flush text-muted">
+                <li class="list-group-item">
+                  {{post_likes}} likes
+                </li>
+                <li class="list-group-item">
+                  {{createdAt}}
+                </li>
+                <li class="list-group-item">
+                  <a href="/{{nome}}">{{nome}}</a>
+                </li>
+              </ul>
+              
+            </div>
           </div>
         </div>
       </div>
+    </div>
   {{/each}}
 </div>
